@@ -14,8 +14,8 @@ https://www.kaggle.com/yelp-dataset/yelp-dataset
 Distributed Computation
 
 ## Business Value
-Make it efficient to find the right fit 
+Looking at both yelp and airbnb can be stressful, let's make it easy to find the right fit.
 
 ## MVP
-A platform where customers put in city, interest, output a list or a map showing recommendations.
+A platform where customers put in city, interest, price range, output a list or a map showing recommendations.
 
