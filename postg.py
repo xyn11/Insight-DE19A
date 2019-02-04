@@ -1,0 +1,1 @@
+CREATE TABLE y_business(id serial PRIMARY KEY, name text NOT NULL,latitude float NOT NULL, longitude float NOT NULL,stars float NOT NULL, number_of_reviews integer NOT NULL, address VARCHAR(255) NOT NULL, city text NOT NULL, state text NOT NULL, categories text NOT NULL);

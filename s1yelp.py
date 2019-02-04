@@ -31,25 +31,24 @@ def getPostgresProps(config):
     }
     return props
 
-config = getConfig()
-sc = SparkContext(conf=getSparkConf(config))
-sqlContext = SQLContext(sc)
-
 def getdf(config): 
     '''filter yelp dataset'''
     yelp_business = sqlContext.read.json(config["s3"]["yelpurl"])
     yelp_business_f = yelp_business['name', 'latitude', 'longitude',
                                     'stars', 'review_count', 'address', 
-                                    'city', 'state']
+                                    'city', 'state','categories']
     return yelp_business_f
 
 def wrtie_to_psql(yelp_business_f, config):
     '''write to psql'''
     yelp_business_f = getdf(config)
-    url = "jdbc:postgresql://localhost/postgres"
+    url = "jdbc:postgresql://10.0.0.14/postgres"
     my_writer = DataFrameWriter(yelp_business_f)
     table = 'y_business'
     mode = 'overwrite'
     props = getPostgresProps(config)
     my_writer.jdbc(url, table, mode, props)
 
+config = getConfig()
+sc = SparkContext(conf=getSparkConf(config))
+sqlContext = SQLContext(sc)
