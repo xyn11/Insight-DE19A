@@ -7,13 +7,23 @@ from os.path import basename
 url = requests.get('http://insideairbnb.com/get-the-data.html').text
 soup = BeautifulSoup(url)
 address_list = []
-for a in soup.select(i for i in ["a[href$ = .csv]", "a[href$ = .csv.fz]", "a[href$ = .geojson]"):
-    address_list.append(a)
-
-#write file    
+'''get all url'''
+for link in soup.find_all('a'):
+    address_link.append(link.get('href'))
+'''filter url that ends with csv, csv.gz, geojson'''
+adrress_filtered = []if url.find('/'):
 for link in address_list:
-    with open(basename(link), "w") as f:
-        f.writelines(requests.get(link))
+        if 'csv' in address_list:
+                adrress_filtered.append(link)
+
+#write file 
+def download(link, name):   
+        for link in address_filtered:
+                with open(name, "w") as f:
+                        f.writelines(requests.get(link))
+
+def get_name(url):
+        name_from_url = url.split('.com/')[1].replace('/','_')
 
 
 #from ec2 to s3

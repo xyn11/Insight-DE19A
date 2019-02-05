@@ -1,28 +1,23 @@
 import json
-from pyspark import SparkContext,SparkConf
-from pyspark.sql import SQLContext,DataFrameWriter,DataFrameReader
+from pyspark import SparkContext, SparkConf
+from pyspark.sql import SQLContext, DataFrameWriter, DataFrameReader
 from pyspark.sql.types import *
-from pyspark.sql.functions import col, sum, lit
+from pyspark.sql.functions import *
 
-sparkClassPath = '/usr/local/spark/jars/postgresql-42.2.5.jar'
-
-def getConfig():
+def get_config():
     with open("secret.json", "r") as f:
         jsonstr = f.read()
         conf = json.loads(jsonstr)
         return conf
 
-def getSparkConf(config):
+def get_spark_conf(config):
     '''set config''' 
     conf = SparkConf()
     conf.setAppName('s1yelp')
-    conf.set('spark.jars', 'file:%s' % sparkClassPath)
-    conf.set('spark.executor.extraClassPath', sparkClassPath)
-    conf.set('spark.driver.extraClassPath', sparkClassPath)
     conf.set('spark.master', config["spark"]["master_url"])
     return conf
 
-def getPostgresProps(config):
+def get_pg_props(config):
     '''set psql properties'''
     props = {
         "user": config["postgres"]["user"],
@@ -31,24 +26,30 @@ def getPostgresProps(config):
     }
     return props
 
-def getdf(config): 
+def getdf(sql_context, config): 
     '''filter yelp dataset'''
-    yelp_business = sqlContext.read.json(config["s3"]["yelpurl"])
+    yelp_business = sql_context.read.json(config["s3"]["yelpurl"])
     yelp_business_f = yelp_business['name', 'latitude', 'longitude',
                                     'stars', 'review_count', 'address', 
                                     'city', 'state','categories']
     return yelp_business_f
 
-def wrtie_to_psql(yelp_business_f, config):
+def write_to_pg(yelp_business_f, config):
     '''write to psql'''
-    yelp_business_f = getdf(config)
     url = "jdbc:postgresql://10.0.0.14/postgres"
     my_writer = DataFrameWriter(yelp_business_f)
     table = 'y_business'
     mode = 'overwrite'
-    props = getPostgresProps(config)
+    props = get_pg_props(config)
     my_writer.jdbc(url, table, mode, props)
 
-config = getConfig()
-sc = SparkContext(conf=getSparkConf(config))
-sqlContext = SQLContext(sc)
+def main():
+    config = get_config()
+    spark_conf = get_spark_conf(config)
+    sc = SparkContext(conf=spark_conf)
+    sql_context = SQLContext(sc)
+    yelp_business_f = getdf(sql_context, config)
+    write_to_pg(yelp_business_f, config)
+
+if __name__ == '__main__':
+    main()
