@@ -1,4 +1,6 @@
 import json
+import tempfile
+import os
 from pyspark import SparkContext, SparkConf
 from pyspark.sql import SQLContext, DataFrameWriter, DataFrameReader
 from pyspark.sql.types import *
@@ -11,9 +13,9 @@ def get_config():
         return conf
 
 def get_spark_conf(config):
-    '''set config''' 
+    '''set config'''
     conf = SparkConf()
-    conf.setAppName('s1yelp')
+    conf.setAppName('yelp')
     conf.set('spark.master', config["spark"]["master_url"])
     return conf
 
@@ -26,22 +28,21 @@ def get_pg_props(config):
     }
     return props
 
-def getdf(sql_context, config): 
+def getdf(sql_context, config):
     '''filter yelp dataset'''
     yelp_business = sql_context.read.json(config["s3"]["yelpurl"])
-    yelp_business_f = yelp_business['name', 'latitude', 'longitude',
-                                    'stars', 'review_count', 'address', 
-                                    'city', 'state','categories']
+    yelp_business_f = yelp_business[['name', 'latitude', 'longitude',
+                                    'stars', 'review_count', 'address',
+                                     'city', 'state','categories']]
+    yelp_business_f.printSchema()
     return yelp_business_f
 
 def write_to_pg(yelp_business_f, config):
     '''write to psql'''
-    url = "jdbc:postgresql://10.0.0.14/postgres"
-    my_writer = DataFrameWriter(yelp_business_f)
+    url = "jdbc:postgresql://10.0.0.14/xyn"
     table = 'y_business'
-    mode = 'overwrite'
     props = get_pg_props(config)
-    my_writer.jdbc(url, table, mode, props)
+    yelp_business_f.write.jdbc(url=url, table=table, mode='overwrite', properties=props)
 
 def main():
     config = get_config()

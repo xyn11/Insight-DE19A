@@ -30,5 +30,15 @@ def top_common_tags(tags):
         common_tag.append(x[0])
     return common_tag
 
+def count(abb, y):
+    '''
+    abb:abb dataset
+    y: yelp dataset
+    ''' 
+
+
+def get_high_score(c):
+    
+
 c = [['u'Tours', u' Breweries', u' Pizza', u' Restaurants', u' Food', u' Hotels & Travel'',0],None]
 print(get_categories_tags(c))
