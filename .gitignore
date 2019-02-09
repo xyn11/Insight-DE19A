@@ -1,15 +1,11 @@
-secret.json
-spark_basic.py
-local*.*
-run_s1.sh
-spark_basic.py
-test.py
-test1.py
 *test*.*
 .DS_Store
 
 .env/
 .vscode/
-
+*~
 __pycache__/
 
+
+config.json
+secret.json
