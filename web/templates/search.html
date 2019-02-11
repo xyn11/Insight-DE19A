@@ -11,20 +11,28 @@
     <title>Stay Here</title>
   </head>
   <body>
-    <div class="container">
-        <p>
-            Hello {{city}}
-        </p>
+    <div class="container mycontainer">
+      <table class="table table-striped">
+	<thead>
+	  <tr>
+	    <th scope="col">Name</th>
+	    <th scope="col">City</th>
+	    <th scope="col">Category</th>
+	    <th scope="col">Score</th>
+	  </tr>
+	</thead>
+	<tbody>
+	  {% for listing in listings %}
+	  <tr>
+	    <td>{{listing.abb.name}}</th>
+	    <td>{{listing.abb.city}}</td>
+	    <td>{{category}}</td>
+	    <td>{{listing.score}}</td>
+	  </tr>
+	  {% endfor %}
+	</tbody>
+      </table>
     </div>
-
-    <ul>
-        {% for fake in fakes %}
-        <li>
-            {{ fake.name }} -- {{ fake.addr }}
-        </li>
-        {% endfor %}
-    </ul>
-
 
     
     <!-- Optional JavaScript -->

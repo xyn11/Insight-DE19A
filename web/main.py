@@ -3,27 +3,76 @@ from flask import render_template
 from flask_sqlalchemy import SQLAlchemy
 import json
 
-app = Flask(__name__)
+def get_config():
+    with open("../config.json", "r") as f:
+        jsonstr = f.read()
+        conf = json.loads(jsonstr)
+    return conf
+
 conf = get_config()
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://'+conf["postgres"]["user"]+':' \
-    +conf["postgres"]["password"] + '@' + conf["flask"]["ip"] + ':5432/' + conf["postgres"]["user"]
+env = "development"
+
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = conf["postgres"][env]["url"]
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
 db = SQLAlchemy(app)
 
-class Fake(db.Model):
+class Abb(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), nullable=False)
-    addr = db.Column(db.String(255), nullable=False)
-    
-    def __repr__(self):
-        return f'<Fake name: {self.name} addr: {self.addr}>'
+    latitude = db.Column(db.Float)
+    longitude = db.Column(db.Float)
+    price = db.Column(db.Integer)
+    number_of_reviews = db.Column(db.Integer)
+    name = db.Column(db.String(1023))
+    city = db.Column(db.String(63))
+    restaurants = db.relationship('AbbRestaurants', backref='abb', lazy=True)
+    shopping = db.relationship('AbbShopping', backref='abb', lazy=True)
+    pubs = db.relationship('AbbPubs', backref='abb', lazy=True)    
+
+class AbbRestaurants(db.Model):
+    abb_id = db.Column(db.Integer,
+                       db.ForeignKey('abb.id'),
+                       nullable=False,
+                       primary_key=True)
+
+    score = db.Column(db.Integer, nullable=False)
+
+class AbbShopping(db.Model):
+    abb_id = db.Column(db.Integer,
+                       db.ForeignKey('abb.id'),
+                       nullable=False,
+                       primary_key=True)
+
+    score = db.Column(db.Integer, nullable=False)
+
+class AbbPubs(db.Model):
+    abb_id = db.Column(db.Integer,
+                       db.ForeignKey('abb.id'),
+                       nullable=False,
+                       primary_key=True)
+
+    score = db.Column(db.Integer, nullable=False)
 
 @app.route('/')
 def home():
     return render_template('home.html')
 
-@app.route('/search', methods=['POST'])
+category2table = {
+    "Restaurants": AbbRestaurants,
+    "Shopping": AbbShopping,
+    "Pubs": AbbPubs,
+}
+
+@app.route('/search')
 def search():
-    city = request.form["city"]
-    fakes = Fake.query.all()
-    return render_template('search.html', city=city, fakes=fakes)
+    city = request.args.get("city")
+    category = request.args.get("category")
+    score_table = category2table[category]
+    listings = db.session.query(score_table)\
+                         .join(Abb)\
+                         .order_by(score_table.score.desc())\
+                         .filter(Abb.city == city)\
+                         .limit(5)\
+                         .all()
+    return render_template('search.html', listings=listings, category=category)
