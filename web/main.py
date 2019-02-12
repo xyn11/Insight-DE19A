@@ -28,7 +28,10 @@ class Abb(db.Model):
     city = db.Column(db.String(63))
     restaurants = db.relationship('AbbRestaurants', backref='abb', lazy=True)
     shopping = db.relationship('AbbShopping', backref='abb', lazy=True)
-    pubs = db.relationship('AbbPubs', backref='abb', lazy=True)    
+    pubs = db.relationship('AbbPubs', backref='abb', lazy=True)
+    chinese = db.relationship('AbbChinese', backref='abb', lazy=True)
+    italian = db.relationship('AbbItalian', backref='abb', lazy=True)
+
 
 class AbbRestaurants(db.Model):
     abb_id = db.Column(db.Integer,
@@ -54,6 +57,22 @@ class AbbPubs(db.Model):
 
     score = db.Column(db.Integer, nullable=False)
 
+class AbbChinese(db.Model):
+    abb_id = db.Column(db.Integer,
+                       db.ForeignKey('abb.id'),
+                       nullable=False,
+                       primary_key=True)
+
+    score = db.Column(db.Integer, nullable=False)
+
+class AbbItalian(db.Model):
+    abb_id = db.Column(db.Integer,
+                       db.ForeignKey('abb.id'),
+                       nullable=False,
+                       primary_key=True)
+
+    score = db.Column(db.Integer, nullable=False)
+
 @app.route('/')
 def home():
     return render_template('home.html')
@@ -62,6 +81,8 @@ category2table = {
     "Restaurants": AbbRestaurants,
     "Shopping": AbbShopping,
     "Pubs": AbbPubs,
+    "Chinese": AbbChinese,
+    "Italian": AbbItalian,
 }
 
 @app.route('/search')
