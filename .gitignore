@@ -4,9 +4,11 @@
 .env/
 .vscode/
 *~
+*.swp
 __pycache__/
 .ipynb_checkpoints/
 *.pyc
 
 config.json
 secret.json
+
