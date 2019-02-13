@@ -16,18 +16,17 @@
             <div class="form-group">
                 <label for="city">City</label>
                 <select class="form-control" id="city" name="city">
-                  <option value="Toronto">Toronto</option>
-		  <option value="Montreal">Montreal</option>
+		  {% for city in cities %}
+                    <option value={{city}}>{{city}}</option>
+		  {% endfor %}
                 </select>
             </div>
             <div class="form-group">
                 <label for="category">Category</label>
                 <select class="form-control" id="category" name="category">
-                  <option value="Restaurants">Restaurants</option>
-		  <option value="Shopping">Shopping</option>
-		  <option value="Pubs">Pubs</option>
-		  <option value="Chinese">Chinese</option>
-		  <option value="Italian">Italian</option>		  
+		  {% for category in categories %}
+                    <option value={{category}}>{{category}}</option>
+		  {% endfor %}
                 </select>
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>

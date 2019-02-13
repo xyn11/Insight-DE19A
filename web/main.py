@@ -73,9 +73,12 @@ class AbbItalian(db.Model):
 
     score = db.Column(db.Integer, nullable=False)
 
+cities = ["Toronto", "Montreal", "Austin", "Oakland", "Boston", "Sevilla"]
+categories = ["Restaurants", "Shopping", "Pubs", "Chinese", "Italian"]
+
 @app.route('/')
 def home():
-    return render_template('home.html')
+    return render_template('home.html', cities=cities, categories=categories)
 
 category2table = {
     "Restaurants": AbbRestaurants,
