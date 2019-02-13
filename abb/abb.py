@@ -1,11 +1,14 @@
+import argparse
 import json
 from pyspark import SparkContext, SparkConf
 from pyspark.sql import SQLContext, DataFrameWriter, DataFrameReader
 from pyspark.sql.types import *
 from pyspark.sql.functions import *
 
+env = "development"
+
 def get_config():
-    with open("secret.json", "r") as f:
+    with open("../config.json", "r") as f:
         jsonstr = f.read()
         conf = json.loads(jsonstr)
         return conf
@@ -26,28 +29,48 @@ def get_pg_props(config):
     }
     return props
 
-def getdf(sql_context, config): 
+def getdf(sql_context, config, city):
     '''filter abb dataset'''
-    toronto_listings = sql_context.read.format('com.databricks.spark.csv').options(header='true').load(config["s3"]["abb_toronto_listings"])
-    toronto_listings_f = toronto_listings['id', 'latitude', 'longitude',
-                                    'price', 'number_of_reviews']
-    return toronto_listings_f
 
-def write_to_pg(toronto_listings_f, config):
+    df = sql_context\
+         .read\
+         .format('csv')\
+         .options(header='true')\
+         .load(config["abb"][city]["s3"])
+    return df
+
+def append_to_pg(df, config):
     '''write to psql'''
-    url = "jdbc:postgresql://10.0.0.14/xyn"
-    table = 'toronto_listings'
-    mode = 'overwrite'
+    url = config["postgres"][env]["jdbc"]
     props = get_pg_props(config)
-    toronto_listings_f.write.jdbc(url, table, mode, props)
+    df.write.jdbc(url, table="abb", mode="append", properties=props)
 
-def main():
+selected_columns = ["name", "city", "latitude", "longitude", "price", "number_of_reviews"]
+
+def get_city_df(sql_context, config, city):
+    df = getdf(sql_context, config, city=city)
+    city_listings = df.withColumn("latitude", df["latitude"]\
+                      .cast(DoubleType()))\
+                      .withColumn("longitude", df["longitude"].cast(DoubleType()))\
+                      .withColumn("price", df["price"].cast(IntegerType()))\
+                      .withColumn("number_of_reviews", df["number_of_reviews"].cast(IntegerType()))\
+                      .withColumn("city", lit(city))[selected_columns]
+    return city_listings
+
+def main(city):
     config = get_config()
     spark_conf = get_spark_conf(config)
     sc = SparkContext(conf=spark_conf)
     sql_context = SQLContext(sc)
-    toronto_listings_f = getdf(sql_context, config)
-    write_to_pg(toronto_listings_f, config)
+    df = get_city_df(sql_context, config, city)
+    append_to_pg(df, config)
 
-if __name__ == '__main__':
-    main()
+def parse_city_from_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("city")
+    args = parser.parse_args()
+    return args.city
+
+if __name__ == "__main__":
+    city = parse_city_from_args()
+    main(city)
