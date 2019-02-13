@@ -7,32 +7,87 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
+    <!-- Libraries CSS Files -->
+    <link href="lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="lib/animate/animate.min.css" rel="stylesheet">
+    <link href="lib/ionicons/css/ionicons.min.css" rel="stylesheet">
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    
+    <!-- Main Stylesheet File -->
     <link rel="stylesheet" href="static/style.css" />
+    <link rel="stylesheet" href="static/mystyle.css" />    
+
     <title>Stay Here</title>
   </head>
   <body>
-    <div class="container mycontainer">
-      <table class="table table-striped">
-	<thead>
-	  <tr>
-	    <th scope="col">Name</th>
-	    <th scope="col">City</th>
-	    <th scope="col">Category</th>
-	    <th scope="col">Score</th>
-	  </tr>
-	</thead>
-	<tbody>
-	  {% for listing in listings %}
-	  <tr>
-	    <td>{{listing.abb.name}}</th>
-	    <td>{{listing.abb.city}}</td>
-	    <td>{{category}}</td>
-	    <td>{{listing.score}}</td>
-	  </tr>
-	  {% endfor %}
-	</tbody>
-      </table>
-    </div>
+    <!--/ Nav Star /-->
+    <nav class="navbar navbar-default navbar-trans navbar-expand-lg fixed-top">
+      <div class="container">
+	<button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarDefault"
+		aria-controls="navbarDefault" aria-expanded="false" aria-label="Toggle navigation">
+	  <span></span>
+	  <span></span>
+	  <span></span>
+	</button>
+	<a class="navbar-brand text-brand" href="index.html">Stay<span class="color-b">Here</span></a>
+
+	<button type="button" class="btn btn-link nav-search navbar-toggle-box-collapse d-md-none" data-toggle="collapse"
+		data-target="#navbarTogglerDemo01" aria-expanded="false">
+	  <span class="fa fa-search" aria-hidden="true"></span>
+	</button>
+	<div class="navbar-collapse collapse justify-content-center" id="navbarDefault">
+	  <ul class="navbar-nav">
+	    <li class="nav-item">
+	      <a class="nav-link active" href="/">Home</a>
+	    </li>
+	    <li class="nav-item">
+	      <a class="nav-link">About</a>
+	    </li>
+	    <li class="nav-item">
+	      <a class="nav-link">Contact</a>
+	    </li>
+	  </ul>
+	</div>
+      </div>
+    </nav>
+    <!--/ Nav End /-->
+    <section class="section-forms section-t8" id="last-section">    
+      <div class="container">
+	<div class="row">
+	  <div class="col-md-12">
+	    <div class="title-wrap d-flex justify-content-between">
+	      <div class="title-box">
+		<h2 class="title-a">Top Listings</h2>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	
+	<table class="table table-striped">
+	  <thead>
+	    <tr>
+	      <th scope="col">Name</th>
+	      <th scope="col">City</th>
+	      <th scope="col">Category</th>
+	      <th scope="col">Score</th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	    {% for listing in listings %}
+	    <tr>
+	      <td>{{listing.abb.name}}</th>
+              <td>{{listing.abb.city}}</td>
+              <td>{{category}}</td>
+              <td>{{listing.score}}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
 
     
     <!-- Optional JavaScript -->
