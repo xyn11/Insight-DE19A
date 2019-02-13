@@ -1,8 +1,6 @@
 import pandas as pd
-import numpy as np
 from bs4 import BeautifulSoup
 import requests
-import csv
 
 def yelp_city():
         '''
@@ -53,19 +51,12 @@ def get_city(abb_city, yelp_city):
                         city.append(c)
         return city
 
-def output_txt(records, filename):
-        '''
-        output txt file of cities in both dataset
-        '''
-        with open(filename, 'w+') as f:
-                for item in records:
-                        f.write(item[i]+';')
-
 def main():
         address = abb_link()
-        abb_city = abb_city(address)
-        yelp_city = yelp_city()
-        records = get_city(abb_city, yelp_city)
+        abb = abb_city(address)
+        yelp = yelp_city()
+        records = get_city(abb, yelp)
+        print(records)
 
 if __name__ == '__main__':
     main()
