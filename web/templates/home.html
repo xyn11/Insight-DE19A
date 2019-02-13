@@ -7,34 +7,90 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
+    <!-- Libraries CSS Files -->
+    <link href="lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="lib/animate/animate.min.css" rel="stylesheet">
+    <link href="lib/ionicons/css/ionicons.min.css" rel="stylesheet">
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    
+    <!-- Main Stylesheet File -->
     <link rel="stylesheet" href="static/style.css" />
+    <link rel="stylesheet" href="static/mystyle.css" />    
     <title>Stay Here</title>
   </head>
   <body>
-    <div class="container mycontainer">
-        <form id="home-form" action="/search" method="GET">
-            <div class="form-group">
-                <label for="city">City</label>
-                <select class="form-control" id="city" name="city">
-		  {% for city in cities %}
-                    <option value={{city}}>{{city}}</option>
-		  {% endfor %}
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="category">Category</label>
-                <select class="form-control" id="category" name="category">
-		  {% for category in categories %}
-                    <option value={{category}}>{{category}}</option>
-		  {% endfor %}
-                </select>
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
-    </div>
+    <!--/ Nav Star /-->
 
+    <nav class="navbar navbar-default navbar-trans navbar-expand-lg fixed-top">
+      <div class="container">
+	<button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarDefault"
+		aria-controls="navbarDefault" aria-expanded="false" aria-label="Toggle navigation">
+	  <span></span>
+	  <span></span>
+	  <span></span>
+	</button>
+	<a class="navbar-brand text-brand" href="index.html">Stay<span class="color-b">Here</span></a>
+
+	<button type="button" class="btn btn-link nav-search navbar-toggle-box-collapse d-md-none" data-toggle="collapse"
+		data-target="#navbarTogglerDemo01" aria-expanded="false">
+	  <span class="fa fa-search" aria-hidden="true"></span>
+	</button>
+	<div class="navbar-collapse collapse justify-content-center" id="navbarDefault">
+	  <ul class="navbar-nav">
+	    <li class="nav-item">
+	      <a class="nav-link active" href="/">Home</a>
+	    </li>
+	    <li class="nav-item">
+	      <a class="nav-link">About</a>
+	    </li>
+	    <li class="nav-item">
+	      <a class="nav-link">Contact</a>
+	    </li>
+	  </ul>
+	</div>
+      </div>
+    </nav>
+    <!--/ Nav End /-->
+
+    <!-- landing image -->
+    <img src="static/airbnb.jpg" width="100%" />
     
-
+    <section class="section-forms section-t8" id="last-section">
+      <div class="container">
+	<div class="row">
+	  <div class="col-md-12">
+	    <div class="title-wrap d-flex justify-content-between">
+	      <div class="title-box">
+		<h2 class="title-a">Search</h2>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	<form id="home-form" action="/search" method="GET">
+          <div class="form-group">
+            <label for="city">City</label>
+            <select class="form-control" id="city" name="city">
+	      {% for city in cities %}
+              <option value={{city}}>{{city}}</option>
+	      {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="category">Category</label>
+            <select class="form-control" id="category" name="category">
+	      {% for category in categories %}
+              <option value={{category}}>{{category}}</option>
+	      {% endfor %}
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button>
+	</form>
+      </div>
+    </section>
+    
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
