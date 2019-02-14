@@ -48,6 +48,7 @@ def append_to_pg(df, config):
 selected_columns = ["name", "city", "latitude", "longitude", "price", "number_of_reviews"]
 
 def get_city_df(sql_context, config, city):
+    '''select useful columns, return dataframe'''
     df = getdf(sql_context, config, city=city)
     city_listings = df.withColumn("latitude", df["latitude"]\
                       .cast(DoubleType()))\
