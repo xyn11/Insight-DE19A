@@ -19,7 +19,7 @@ When you plan your travel, there're several questions one want to get an immedia
 
 ### Data Extraction
 
-Airbnb data is available on [Inside Airbnb](http://insideairbnb.com/get-the-data.html). You can download yelp data set on [Kaggle](https://www.kaggle.com/yelp-dataset/yelp-dataset). Data is updated monthly. Data extraction includes download to Amazon S3, then loading it to Spark and cleaning up. 
+Airbnb data is available on [Inside Airbnb](http://insideairbnb.com/get-the-data.html). You can download yelp dataset from [Kaggle](https://www.kaggle.com/yelp-dataset/yelp-dataset). Data is updated monthly. Data extraction includes uploading raw data to Amazon S3, and loading it to Spark.
 
 ### Data Processing
 There're two major steps of data processing in this project. First is to build a relationship between every single category and yelp business since in yelp dataset `categories` column, one value is a string including several categories. Two table were created in postgres: one table contains all the category names, another table `yelp2category` is the mapping between yelp and category. Second is to caculate a score to rank airbnb listings. After finding out all the business that falls under a certain category within 500 meters around the listing, then calculate a score, giving 1000 to 5 stars, 100 to 4.5 stars, 10 to 4 stars, 1 to 3.5 stars. PostGIS extension is used to index the geography address of yelp business, and to compute distance.
